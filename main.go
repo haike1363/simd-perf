@@ -1,41 +1,14 @@
 package main
 
+import "C"
 import (
-    "github.com/intel-go/cpuid"
     "fmt"
-    "C"
+    "github.com/haike1363/simd-perf/simd/gorilla_avx"
+    "github.com/intel-go/cpuid"
 )
 
-/*
- #cgo CFLAGS: -mavx
- #include "simd/gorilla_avx.c"
-*/
 func main() {
-    fmt.Println("gorilla_avx version", C.gorilla_avx_version())
-
-    fmt.Printf("VendorString:   %s\n", cpuid.VendorIdentificatorString)
-
-    fmt.Printf("Features: ")
-    for i := uint64(0); i < 64; i++ {
-        if cpuid.HasFeature(1 << i) {
-            fmt.Printf("%s ", cpuid.FeatureNames[1<<i])
-        }
-    }
-    fmt.Printf("\n")
-
-    fmt.Printf("ExtendedFeatures: ")
-    for i := uint64(0); i < 64; i++ {
-        if cpuid.HasExtendedFeature(1 << i) {
-            fmt.Printf("%s ", cpuid.ExtendedFeatureNames[1<<i])
-        }
-    }
-    fmt.Printf("\n")
-
-    fmt.Printf("ExtraFeatures: ")
-    for i := uint64(0); i < 64; i++ {
-        if cpuid.HasExtraFeature(1 << i) {
-            fmt.Printf("%s ", cpuid.ExtraFeatureNames[1<<i])
-        }
-    }
-    fmt.Printf("\n")
+    fmt.Println("avx supported: ", cpuid.HasFeature(cpuid.AVX))
+    fmt.Println("avx enabled: ", cpuid.EnabledAVX)
+    fmt.Println("gorilla_avx go version", gorilla_avx.Version())
 }
